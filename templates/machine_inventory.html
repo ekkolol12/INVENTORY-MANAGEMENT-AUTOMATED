@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <title>Machine Inventory</title>
+</head>
+<body>
+    <h1>Machine Inventory</h1>
+
+    <!-- Display GUI buttons -->
+    {% include 'gui_buttons.html' %}
+
+    <table border="1">
+        <!-- Your table structure for machine_inventory -->
+        <thead>
+            <!-- Table headers -->
+            <tr>
+                {% for key in data["machine_inventory"][0].keys() %}
+                    {% if key != '_id' %}
+                        <th>{{ key }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows -->
+            {% for machine in data["machine_inventory"] %}
+                <tr>
+                    {% for key, value in machine.items() %}
+                        {% if key != '_id' %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

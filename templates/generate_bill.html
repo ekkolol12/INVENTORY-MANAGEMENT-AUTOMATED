@@ -1,0 +1,113 @@
+<!-- generate_bill.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <title>Generate Bill</title>
+</head>
+
+<body>
+    <h1>Generate Bill</h1>
+
+    <!-- Display GUI buttons -->
+    {% include 'gui_buttons.html' %}
+
+    <!-- Form for generating bill -->
+    <form id="generate-bill-form" method="POST" action="{{ url_for('generate_bill') }}">
+        {{ form.csrf_token }}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Recipe Name</th>
+                    <th>Amount (kg)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through bill items from the session -->
+                {% for i, item in bill_items_enum %}
+                    <tr>
+                        <td>
+                            <input type="text" name="recipe_name[]" placeholder="Recipe Name" list="recipe_names" value="{{ item.recipe_name }}">
+                        </td>
+                        <td><input type="number" step="0.01" name="amount[]" placeholder="Amount (kg)" value="{{ item.amount }}"></td>
+                    </tr>
+                {% endfor %}
+                <!-- Display empty rows dynamically based on the fixed max_items -->
+                {% for i in range(25 - max_items) %}
+                    <tr>
+                        <td>
+                            <input type="text" name="recipe_name[]" placeholder="Recipe Name" list="recipe_names" value="">
+                        </td>
+                        <td><input type="number" step="0.01" name="amount[]" placeholder="Amount (kg)" value=""></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <button type="button" onclick="addRow()">Add Row</button>
+                        <button type="submit">Generate Bill</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <!-- Datalist for autofill from recipe names -->
+        <datalist id="recipe_names">
+            {% for recipe in recipe_table_data %}
+                <option value="{{ recipe[0] }}">
+            {% endfor %}
+        </datalist>
+    </form>
+
+    <!-- Display recipe table data for reference -->
+    <h2>Recipe Table Data</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Recipe Name</th>
+                <th>Recipe Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recipe in recipe_table_data %}
+                <tr>
+                    <td>{{ recipe[0] }}</td>
+                    <td>{{ recipe[1] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Display the form errors, if any -->
+    {% if form.errors %}
+        <div style="color: red;">
+            {% for field, errors in form.errors.items() %}
+                <p>{{ field }}: {{ errors | join(', ') }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- JavaScript to reset the form after generating the bill -->
+    <script>
+        document.getElementById("generate-bill-form").reset();
+    </script>
+
+    <!-- JavaScript to add a new row to the table -->
+    <script>
+        function addRow() {
+            var table = document.getElementById("generate-bill-form").getElementsByTagName('tbody')[0];
+            var row = table.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = '<input type="text" name="recipe_name[]" placeholder="Recipe Name" list="recipe_names" value="">';
+            cell2.innerHTML = '<input type="number" step="0.01" name="amount[]" placeholder="Amount (kg)" value="">';
+        }
+    </script>
+</body>
+
+</html>

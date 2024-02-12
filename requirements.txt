@@ -1,0 +1,10 @@
+tabulate
+numpy
+seaborn
+matplotlib
+python-docx
+pymongo
+flask
+flask-wtf
+wtforms
+flask_pymongo

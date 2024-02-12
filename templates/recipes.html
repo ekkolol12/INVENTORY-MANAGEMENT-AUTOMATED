@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <title>Recipes</title>
+</head>
+<body>
+    <h1>Recipes</h1>
+
+    <!-- Display GUI buttons -->
+    {% include 'gui_buttons.html' %}
+
+    <table border="1">
+        <!-- Your table structure for recipes -->
+        <thead>
+            <!-- Table headers -->
+            <tr>
+                {% for key in data["recipes"][0].keys() %}
+                    {% if key != '_id' %}
+                        <th>{{ key }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows -->
+            {% for recipe in data["recipes"] %}
+                <tr>
+                    {% for key, value in recipe.items() %}
+                        {% if key != '_id' %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

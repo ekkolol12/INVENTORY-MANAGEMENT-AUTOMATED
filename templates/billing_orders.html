@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <title>Billing Orders</title>
+    <style>
+        /* Add a style to set a fixed width for the "items" column */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        /* Set a fixed width for the "items" column */
+        td.items {
+            width: 200px; /* You can adjust the width as needed */
+            /* Add any additional styles for the "items" column here */
+        }
+
+        /* Set a fixed width for the "total_cost" column */
+        td.total_cost {
+            width: 150px; /* You can adjust the width as needed */
+            /* Add any additional styles for the "total_cost" column here */
+        }
+    </style>
+</head>
+<body>
+    <h1>Billing Orders</h1>
+
+    <!-- Display GUI buttons -->
+    {% include 'gui_buttons.html' %}
+
+    <table>
+        <!-- Your table structure for billing_orders -->
+        <thead>
+            <!-- Table headers -->
+            <tr>
+                {% for key in data["billing_orders"][0].keys() %}
+                    {% if key != '_id' %}
+                        <th>{{ key }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows -->
+            {% for order in data["billing_orders"] %}
+                <tr>
+                    {% for key, value in order.items() %}
+                        {% if key != '_id' %}
+                            <td {% if key == 'items' %}class="items"{% elif key == 'total_cost' %}class="total_cost"{% endif %}>
+                                {% if value is iterable %}
+                                    {{ value|join(', ') }}
+                                {% elif value is not string %}
+                                    {{ value }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
